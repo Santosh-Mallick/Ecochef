@@ -41,6 +41,7 @@ const Home = () => {
               </button>
               <button
                 type="button"
+                onClick={() => navigate('/how-it-works')}
                 className={`px-8 py-4 border rounded-xl font-semibold transition-colors ${
                   isDarkMode 
                   ? "bg-slate-800 border-slate-700 text-white hover:border-emerald-500" 

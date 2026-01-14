@@ -1,12 +1,11 @@
-// src/store/kitchenSlice.js
 import { createSlice } from '@reduxjs/toolkit';
 
 const kitchenSlice = createSlice({
   name: 'kitchen',
   initialState: {
     ingredients: [
-      { id: 1, name: 'Organic Spinach', category: 'Vegetables' },
-      { id: 2, name: 'Greek Yogurt', category: 'Dairy' }
+      { id: 1, name: 'Organic Spinach', category: 'Vegetables', qty: 1, dateAdded: '1/10/2026' },
+      { id: 2, name: 'Greek Yogurt', category: 'Dairy', qty: 1, dateAdded: '1/12/2026' }
     ],
     profile: {
       name: "Guest Cook",
@@ -19,12 +18,18 @@ const kitchenSlice = createSlice({
         disliked_ingredients: []
       },
       interactions: [] 
+    },
+    auth: {
+      token: localStorage.getItem('token') || null,
+      isAuthenticated: !!localStorage.getItem('token'),
+      loading: false,
+      user: null
     }
   },
   reducers: {
-    // --- INGREDIENT ACTIONS (Needed for FridgeManager) ---
     addIngredient: (state, action) => {
-      state.ingredients.push(action.payload);
+      // payload: { id, name, category, qty, dateAdded }
+      state.ingredients.unshift(action.payload); 
     },
     removeIngredient: (state, action) => {
       state.ingredients = state.ingredients.filter(
@@ -32,7 +37,7 @@ const kitchenSlice = createSlice({
       );
     },
 
-    // --- PROFILE ACTIONS (Needed for Onboarding) ---
+    // --- PROFILE ACTIONS ---
     updateProfileField: (state, action) => {
       const { field, value } = action.payload;
       if (field.includes('.')) {
@@ -50,16 +55,31 @@ const kitchenSlice = createSlice({
       } else {
         state.profile[field].splice(index, 1);
       }
+    },
+
+    // --- AUTH ACTIONS ---
+    setLogin: (state, action) => {
+      state.auth.token = action.payload.token;
+      state.auth.user = action.payload.user;
+      state.auth.isAuthenticated = true;
+      localStorage.setItem('token', action.payload.token);
+    },
+    logout: (state) => {
+      state.auth.token = null;
+      state.auth.user = null;
+      state.auth.isAuthenticated = false;
+      localStorage.removeItem('token');
     }
   }
 });
 
-// IMPORTANT: Every action used in your components MUST be exported here
 export const { 
   addIngredient, 
   removeIngredient, 
   updateProfileField, 
-  toggleArrayPreference 
+  toggleArrayPreference,
+  setLogin,
+  logout 
 } = kitchenSlice.actions;
 
 export default kitchenSlice.reducer;
