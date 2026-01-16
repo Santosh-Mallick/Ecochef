@@ -8,8 +8,9 @@ const kitchenSlice = createSlice({
       { id: 2, name: 'Greek Yogurt', category: 'Dairy', qty: 1, dateAdded: '1/12/2026' }
     ],
     profile: {
-      name: "Guest Cook",
-      experience_level: "intermediate", 
+      name: "Chef",
+      email: "",
+      experience_level: "", 
       dietary_preferences: [], 
       allergies: [],
       health_goals: [], 
@@ -20,10 +21,10 @@ const kitchenSlice = createSlice({
       interactions: [] 
     },
     auth: {
+      // Changed to match your Token model's 'access_token' field
       token: localStorage.getItem('token') || null,
       isAuthenticated: !!localStorage.getItem('token'),
       loading: false,
-      user: null
     }
   },
   reducers: {
@@ -59,16 +60,35 @@ const kitchenSlice = createSlice({
 
     // --- AUTH ACTIONS ---
     setLogin: (state, action) => {
-      // state.auth.token = action.payload.token;
-      state.auth.user = action.payload.user;
-      state.auth.isAuthenticated = true;
-      localStorage.setItem('token', action.payload.token);
+      // Based on your Token model: action.payload.access_token
+      // Based on your AuthResponse model: action.payload.user
+      const { access_token, user } = action.payload;
+
+      if (access_token) {
+        state.auth.token = access_token;
+        state.auth.isAuthenticated = true;
+        localStorage.setItem('token', access_token);
+      }
+
+      if (user) {
+        // user includes 'email' and 'profile' dict from your UserResponse model
+        state.profile.email = user.email;
+        
+        // If the backend 'profile' dict contains your onboarding fields:
+        if (user.profile) {
+          state.profile = { 
+            ...state.profile, 
+            ...user.profile 
+          };
+        }
+      }
     },
     logout: (state) => {
       state.auth.token = null;
-      state.auth.user = null;
       state.auth.isAuthenticated = false;
       localStorage.removeItem('token');
+      // Reset profile to empty strings/arrays
+      state.profile = kitchenSlice.getInitialState().profile;
     }
   }
 });

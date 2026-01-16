@@ -11,6 +11,8 @@ import { setLogin } from "../../store/kitchenSlice";
 const SignupOnBoarding = () => {
   const [step, setStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
+  
+  // Local state for the form
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -52,36 +54,35 @@ const SignupOnBoarding = () => {
     setFormData({ ...formData, allergies: formData.allergies.filter(a => a !== name) });
   };
 
-  const handleSubmit = async () => {
+const handleSubmit = async () => {
     setIsLoading(true);
     try {
-      console.log("Submitting form data:", formData);
-      
+      // 1. Prepare data to match UserCreate Pydantic model
+      // We send the flat formData because the backend UserCreate expects these fields
       const response = await fetch('http://127.0.0.1:8000/register', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
 
-      console.log("Response status:", response.status);
-      console.log("Response OK:", response.ok);
-
       const responseData = await response.json();
-      console.log("Response data:", responseData);
 
       if (!response.ok) {
-        console.error("Backend error response:", responseData);
         alert(`Signup failed: ${responseData.detail || 'Unknown error'}`);
         return;
       }
 
-      console.log("Login payload:", responseData);
+      /**
+       * 2. Sync with kitchenSlice
+       * responseData matches AuthResponse: { access_token, user: { email, profile: { ... } } }
+       *
+       */
       dispatch(setLogin(responseData));
+      
+      // 3. Navigation
       navigate("/");
     } catch (error) {
-      console.error("Signup failed with exception:", error);
+      console.error("Signup failed:", error);
       alert(`Error: ${error.message}`);
     } finally {
       setIsLoading(false);
