@@ -34,7 +34,7 @@ const Home = () => {
             <div className="flex flex-col sm:flex-row gap-4">
               <button
                 type="button"
-                onClick={() => navigate('/onboarding')}
+                onClick={() => navigate('/signup')}
                 className="px-8 py-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-semibold transition-colors shadow-lg shadow-emerald-200"
               >
                 Get Started Free

@@ -74,7 +74,7 @@ const Onboarding = () => {
                         })
                       )
                     }
-                    className={`p-4 rounded-xl border-2 transition-all capitalize ${
+                    className={`p-4 rounded-xl border-2 transition-all capitalize cursor-pointer ${
                       profile.experience_level === lvl
                         ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20"
                         : "border-transparent bg-white dark:bg-slate-800"
@@ -95,7 +95,7 @@ const Onboarding = () => {
               Any dietary preferences?
             </h2>
             <div className="grid grid-cols-2 gap-4">
-              {["Vegetarian", "Vegan", "Gluten-Free", "Keto", "Paleo"].map(
+              {["Vegetarian", "Vegan", "Gluten-Free", "Keto", "Paleo", 'None'].map(
                 (diet) => (
                   <button
                     key={diet}
@@ -107,7 +107,7 @@ const Onboarding = () => {
                         })
                       )
                     }
-                    className={`p-4 text-left rounded-xl border-2 flex justify-between items-center ${
+                    className={`p-4 text-left rounded-xl border-2 flex justify-between items-center cursor-pointer ${
                       profile.dietary_preferences.includes(diet)
                         ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20"
                         : "border-transparent bg-white dark:bg-slate-800"
@@ -131,7 +131,7 @@ const Onboarding = () => {
               What are your health goals?
             </h2>
             <div className="grid grid-cols-1 gap-4">
-              {["low-carb", "high-protein", "low-sodium", "energy-boost"].map(
+              {["low-carb", "high-protein", "low-sodium", "energy-boost", 'None'].map(
                 (goal) => (
                   <button
                     key={goal}
@@ -143,7 +143,7 @@ const Onboarding = () => {
                         })
                       )
                     }
-                    className={`p-4 text-left rounded-xl border-2 flex justify-between items-center ${
+                    className={`p-4 text-left rounded-xl border-2 flex justify-between items-center cursor-pointer ${
                       profile.health_goals.includes(goal)
                         ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20"
                         : "border-transparent bg-white dark:bg-slate-800"

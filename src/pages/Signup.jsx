@@ -5,6 +5,8 @@ import { useNavigate, Link } from "react-router-dom";
 import { User, Mail, Lock, ArrowRight, Loader2 } from "lucide-react"; // Added Loader2
 import { updateProfileField, setLogin } from "../../store/kitchenSlice";
 
+
+
 const Signup = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -19,35 +21,36 @@ const Signup = () => {
 
   const handleSignup = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
+    // setIsLoading(true);
 
-    try {
-      const mockResponse = {
-        token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...", // Mock JWT
-        user: { email: formData.email, name: formData.name },
-      };
+    // try {
+    //   const mockResponse = {
+    //     token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...", // Mock JWT
+    //     user: { email: formData.email, name: formData.name },
+    //   };
 
-      // 1. Update Profile Schema (For the Profile Page)
-      dispatch(updateProfileField({ field: "name", value: formData.name }));
+    //   // 1. Update Profile Schema (For the Profile Page)
+    //   dispatch(updateProfileField({ field: "name", value: formData.name }));
 
-      // 2. ✅ Use setLogin to update Auth State
-      // This sets isAuthenticated to true and saves the token to localStorage
-      dispatch(
-        setLogin({
-          token: mockResponse.token,
-          user: mockResponse.user,
-        })
-      );
+    //   // 2. ✅ Use setLogin to update Auth State
+    //   // This sets isAuthenticated to true and saves the token to localStorage
+    //   dispatch(
+    //     setLogin({
+    //       token: mockResponse.token,
+    //       user: mockResponse.user,
+    //     })
+    //   );
 
-      // 3. Navigate to Onboarding
-      setTimeout(() => {
-        setIsLoading(false);
-        navigate("/onboarding");
-      }, 1000);
-    } catch (error) {
-      console.error("Signup failed:", error);
-      setIsLoading(false);
-    }
+    //   // 3. Navigate to Onboarding
+    //   setTimeout(() => {
+    //     setIsLoading(false);
+    //     navigate("/onboarding");
+    //   }, 1000);
+    // } catch (error) {
+    //   console.error("Signup failed:", error);
+    //   setIsLoading(false);
+    // }
+    navigate('/onboarding')
   };
 
   return (
@@ -185,7 +188,7 @@ const Signup = () => {
               <Loader2 className="animate-spin" size={20} />
             ) : (
               <>
-                Create Account
+                Next
                 <ArrowRight
                   size={20}
                   className="group-hover:translate-x-1 transition-transform"
