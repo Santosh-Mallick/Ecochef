@@ -11,6 +11,7 @@ import Inventory from "./pages/Inventory";
 import HowItWorks from "./pages/HowItWorks";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Profile from "./pages/Profile";
+import SignupOnBoarding from "./pages/signupOnBoarding";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/signupOnBoarding" element={<SignupOnBoarding/>} />
           <Route
             path="/recipes"
             element={

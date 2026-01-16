@@ -173,7 +173,7 @@ const Onboarding = () => {
             </p>
             <button
               onClick={() => navigate("/")}
-              className="w-full p-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold"
+              className="w-full p-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold cursor-pointer"
             >
               Finish Setup
             </button>
@@ -186,13 +186,13 @@ const Onboarding = () => {
             <button
               onClick={prevStep}
               disabled={step === 1}
-              className="flex items-center gap-2 px-6 py-3 text-slate-500 disabled:opacity-0"
+              className="flex items-center gap-2 px-6 py-3 text-slate-500 disabled:opacity-0 cursor-pointer"
             >
               <ChevronLeft size={20} /> Back
             </button>
             <button
               onClick={nextStep}
-              className="flex items-center gap-2 px-8 py-3 bg-emerald-600 text-white rounded-xl font-bold hover:bg-emerald-700"
+              className="flex items-center gap-2 px-8 py-3 bg-emerald-600 text-white rounded-xl font-bold hover:bg-emerald-700 cursor-pointer"
             >
               Next <ChevronRight size={20} />
             </button>

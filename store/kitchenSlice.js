@@ -59,7 +59,7 @@ const kitchenSlice = createSlice({
 
     // --- AUTH ACTIONS ---
     setLogin: (state, action) => {
-      state.auth.token = action.payload.token;
+      // state.auth.token = action.payload.token;
       state.auth.user = action.payload.user;
       state.auth.isAuthenticated = true;
       localStorage.setItem('token', action.payload.token);
