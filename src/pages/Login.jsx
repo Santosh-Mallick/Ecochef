@@ -21,7 +21,6 @@ const handleLogin = async (e) => {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
-      // FastAPI OAuth2 usually expects form data
       body: new URLSearchParams({
         username: email,
         password: password,
@@ -31,12 +30,17 @@ const handleLogin = async (e) => {
     const data = await response.json();
 
     if (response.ok) {
+      /**
+       * ADJUSTMENT:
+       * Your kitchenSlice specifically looks for 'access_token' and 'user'.
+       * If your /token endpoint returns a full AuthResponse (including user profile),
+       * pass 'data' directly. If it only returns the token, structure it as below:
+       */
       dispatch(setLogin({ 
-        token: data.access_token, 
-        user: { email: email } 
+        access_token: data.access_token, // Changed from 'token' to 'access_token'
+        user: data.user || { email: email } // Ensure user info is passed if available
       }));
       
-      // 2. Redirect to dashboard
       navigate('/');
     } else {
       alert(data.detail || "Login failed");

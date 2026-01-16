@@ -1,7 +1,6 @@
 // src/pages/Home.jsx
 import { useSelector } from "react-redux";
 import { Leaf, Cpu, Zap, Utensils } from "lucide-react";
-import { FridgeManager } from "../components/FridgeManager";
 import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
@@ -27,7 +26,7 @@ const Home = () => {
             </h1>
 
             <p className={`text-lg max-w-xl mb-10 ${isDarkMode ? "text-slate-400" : "text-slate-600"}`}>
-              EcoChef AI analyzes your fridge, suggests zero-waste recipes, and tracks your
+              Cook-Mate AI analyzes your fridge, suggests zero-waste recipes, and tracks your
               carbon footprint—all in one intelligent kitchen dashboard.
             </p>
 
@@ -55,7 +54,7 @@ const Home = () => {
 
           {/* Right Column: Interactive Fridge (Redux Component) */}
           <div className="w-full lg:max-w-md mx-auto">
-             <FridgeManager />
+            
           </div>
         </div>
       </section>

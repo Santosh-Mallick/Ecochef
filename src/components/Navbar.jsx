@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { toggleTheme } from "../../store/uiSlice";
 import { logout } from "../../store/kitchenSlice";
 import { Moon, Sun, UserCircle, LogOut, User, Settings } from "lucide-react";
+import img from "../assets/logoimg.png";
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -23,15 +24,14 @@ const Navbar = () => {
         {/* Left Side: Logo */}
         <div className="flex items-center z-10">
            <Link to="/" className="text-2xl font-black text-emerald-600 flex items-center gap-2">
-            <div className="w-8 h-8 bg-emerald-600 rounded-lg shadow-sm" />
-            <span className="hidden lg:block">EcoChef AI</span>
+            {/* <div className="w-8 h-8 bg-emerald-600 rounded-lg shadow-sm" /> */}
+            <img className="w-35 h-14" src={img} alt="EcoChef Logo" />
           </Link>
         </div>
 
         {/* ✅ Center: Navigation Links (Absolute Centering) */}
         <div className="absolute left-1/2 -translate-x-1/2 hidden md:flex gap-10 font-bold uppercase tracking-widest text-xs">
           <Link to="/recipes" className="hover:text-emerald-500 transition-colors py-2">Recipes</Link>
-          <Link to="/inventory" className="hover:text-emerald-500 transition-colors py-2">My Fridge</Link>
         </div>
 
         {/* Right Side Actions */}
