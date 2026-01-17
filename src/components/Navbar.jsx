@@ -1,9 +1,8 @@
-// src/components/Navbar.jsx
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleTheme } from "../../store/uiSlice";
 import { logout } from "../../store/kitchenSlice";
-import { Moon, Sun, UserCircle, LogOut, User, Settings } from "lucide-react";
+import { Moon, Sun, UserCircle, LogOut, Settings } from "lucide-react";
 import img from "../assets/logoimg.png";
 
 const Navbar = () => {
@@ -11,8 +10,10 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   const isDarkMode = useSelector((state) => state.ui.darkMode);
-  const isAuthenticated = useSelector((state) => state.kitchen.auth);
+  // Corrected selector path: state.kitchen.auth.isAuthenticated
+  const isAuthenticated = useSelector((state) => state.kitchen.auth.isAuthenticated);
   const profile = useSelector((state) => state.kitchen.profile);
+
   return (
     <nav className={`fixed top-0 w-full z-50 transition-all duration-300 border-b ${
       isDarkMode 
@@ -24,12 +25,11 @@ const Navbar = () => {
         {/* Left Side: Logo */}
         <div className="flex items-center z-10">
            <Link to="/" className="text-2xl font-black text-emerald-600 flex items-center gap-2">
-            {/* <div className="w-8 h-8 bg-emerald-600 rounded-lg shadow-sm" /> */}
             <img className="w-35 h-14" src={img} alt="EcoChef Logo" />
           </Link>
         </div>
 
-        {/* ✅ Center: Navigation Links (Absolute Centering) */}
+        {/* Center: Navigation Links */}
         <div className="absolute left-1/2 -translate-x-1/2 hidden md:flex gap-10 font-bold uppercase tracking-widest text-xs">
           <Link to="/recipes" className="hover:text-emerald-500 transition-colors py-2">Recipes</Link>
         </div>
@@ -44,8 +44,9 @@ const Navbar = () => {
             {isDarkMode ? <Sun size={18} className="text-yellow-400" /> : <Moon size={18} />}
           </button>
 
-          <div className="h-5 w-1px bg-slate-200 dark:bg-slate-700 mx-1" />
+          <div className="h-5 w-px bg-slate-200 dark:bg-slate-700 mx-1" />
 
+          {/* Conditional Rendering based on Auth */}
           {isAuthenticated ? (
             <div className="flex items-center gap-1">
               {/* Profile Link */}
@@ -61,7 +62,7 @@ const Navbar = () => {
                 </span>
               </Link>
               
-              {/* ✅ Settings Icon (Navigates to Profile) */}
+              {/* Settings Icon */}
               <button 
                 onClick={() => navigate('/profile')}
                 className={`p-2 rounded-full transition-colors ${isDarkMode ? 'hover:bg-slate-800 text-slate-400' : 'hover:bg-slate-100 text-slate-500'}`}
@@ -70,14 +71,17 @@ const Navbar = () => {
                 <Settings size={20} />
               </button>
 
+              {/* Logout Button - ONLY appears when isAuthenticated is true */}
               <button 
                 onClick={() => dispatch(logout())}
                 className="p-2 text-slate-400 hover:text-red-500 transition-colors"
+                title="Logout"
               >
                 <LogOut size={18} />
               </button>
             </div>
           ) : (
+            /* Login Icon - ONLY appears when isAuthenticated is false */
             <button 
               onClick={() => navigate('/login')} 
               className={`p-1.5 rounded-full transition-colors ${isDarkMode ? 'hover:bg-slate-800' : 'hover:bg-slate-100'}`}

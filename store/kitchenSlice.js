@@ -21,15 +21,14 @@ const kitchenSlice = createSlice({
       interactions: [] 
     },
     auth: {
-      // Changed to match your Token model's 'access_token' field
       token: localStorage.getItem('token') || null,
+      // Boolean check: Does the token exist?
       isAuthenticated: !!localStorage.getItem('token'),
       loading: false,
     }
   },
   reducers: {
     addIngredient: (state, action) => {
-      // payload: { id, name, category, qty, dateAdded }
       state.ingredients.unshift(action.payload); 
     },
     removeIngredient: (state, action) => {
@@ -37,8 +36,6 @@ const kitchenSlice = createSlice({
         (item) => item.id !== action.payload
       );
     },
-
-    // --- PROFILE ACTIONS ---
     updateProfileField: (state, action) => {
       const { field, value } = action.payload;
       if (field.includes('.')) {
@@ -57,29 +54,29 @@ const kitchenSlice = createSlice({
         state.profile[field].splice(index, 1);
       }
     },
-
-    // --- AUTH ACTIONS ---
     setLogin: (state, action) => {
-      // Based on your Token model: action.payload.access_token
-      // Based on your AuthResponse model: action.payload.user
-      const { access_token, user } = action.payload;
-
-      if (access_token) {
-        state.auth.token = access_token;
-        state.auth.isAuthenticated = true;
-        localStorage.setItem('token', access_token);
-      }
+      const { token, user } = action.payload;
 
       if (user) {
-        // user includes 'email' and 'profile' dict from your UserResponse model
+        state.auth.isAuthenticated = true;
+        state.auth.token = token || state.auth.token;
         state.profile.email = user.email;
-        
-        // If the backend 'profile' dict contains your onboarding fields:
         if (user.profile) {
-          state.profile = { 
-            ...state.profile, 
-            ...user.profile 
-          };
+          state.profile = { ...state.profile, ...user.profile };
+        } else if (user.name) {
+          state.profile.name = user.name;
+        }
+      }
+    },
+    initializeAuth: (state, action) => {
+      const { token, user, isAuthenticated } = action.payload;
+      state.auth.token = token;
+      state.auth.isAuthenticated = isAuthenticated;
+      if (user && isAuthenticated) {
+        state.profile.email = user.email;
+        state.profile.name = user.name || state.profile.name;
+        if (user.profile) {
+          state.profile = { ...state.profile, ...user.profile };
         }
       }
     },
@@ -87,8 +84,17 @@ const kitchenSlice = createSlice({
       state.auth.token = null;
       state.auth.isAuthenticated = false;
       localStorage.removeItem('token');
-      // Reset profile to empty strings/arrays
-      state.profile = kitchenSlice.getInitialState().profile;
+      // Reset profile to default
+      state.profile = {
+        name: "Chef",
+        email: "",
+        experience_level: "", 
+        dietary_preferences: [], 
+        allergies: [],
+        health_goals: [], 
+        explicit_preferences: { liked_cuisines: [], disliked_ingredients: [] },
+        interactions: []
+      };
     }
   }
 });
@@ -99,6 +105,7 @@ export const {
   updateProfileField, 
   toggleArrayPreference,
   setLogin,
+  initializeAuth,
   logout 
 } = kitchenSlice.actions;
 

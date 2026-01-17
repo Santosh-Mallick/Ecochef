@@ -77,7 +77,19 @@ const handleSubmit = async () => {
        * responseData matches AuthResponse: { access_token, user: { email, profile: { ... } } }
        *
        */
-      dispatch(setLogin(responseData));
+      dispatch(setLogin({
+        access_token: responseData.access_token,
+        user: responseData.user || { 
+            email: formData.email, 
+            name: formData.name,
+            profile: {
+                experience_level: formData.experience_level,
+                dietary_preferences: formData.dietary_preferences,
+                allergies: formData.allergies,
+                health_goals: formData.health_goals
+            }
+        }
+      }));
       
       // 3. Navigation
       navigate("/");

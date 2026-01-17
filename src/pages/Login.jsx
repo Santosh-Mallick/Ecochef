@@ -1,7 +1,6 @@
-// src/pages/Login.jsx
 import { useState } from 'react';
-import { useDispatch ,useSelector } from 'react-redux';
-import { useNavigate, Link } from 'react-router-dom'; // 1. Added Link here
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, Link } from 'react-router-dom';
 import { Mail, Lock, LogIn } from 'lucide-react';
 import { setLogin } from '../../store/kitchenSlice';
 
@@ -10,45 +9,46 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const isDarkMode = useSelector((state) => state.ui.darkMode);
   const navigate = useNavigate();
-  const dispatch = useDispatch(); // Added for future JWT action dispatch
+  const dispatch = useDispatch();
 
-const handleLogin = async (e) => {
-  e.preventDefault();
-  
-  try {
-    const response = await fetch('http://localhost:8010/token', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: new URLSearchParams({
-        username: email,
-        password: password,
-      }),
-    });
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    
+    try {
+      const response = await fetch('http://localhost:8000/token', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+          username: email,
+          password: password,
+        }),
+      });
 
-    const data = await response.json();
+      const data = await response.json();
+      console.log("Login Response:", data);
 
-    if (response.ok) {
-      /**
-       * ADJUSTMENT:
-       * Your kitchenSlice specifically looks for 'access_token' and 'user'.
-       * If your /token endpoint returns a full AuthResponse (including user profile),
-       * pass 'data' directly. If it only returns the token, structure it as below:
-       */
-      dispatch(setLogin({ 
-        access_token: data.access_token, // Changed from 'token' to 'access_token'
-        user: data.user || { email: email } // Ensure user info is passed if available
-      }));
-      
-      navigate('/');
-    } else {
-      alert(data.detail || "Login failed");
+      if (data.success) {
+        console.log("Login successful");
+        // Save token to localStorage
+        if (data.access_token) {
+          localStorage.setItem('token', data.access_token);
+        }
+        // Dispatch setLogin with data from your API
+        dispatch(setLogin({ 
+          token: data.access_token,
+          user: data.user || { email: email, name: "Chef" } 
+        }));
+        navigate('/');
+      } else {
+        alert(data.detail || "Login failed");
+      }
+    } catch (error) {
+      console.error("Auth Error:", error);
+      alert("An error occurred during login.");
     }
-  } catch (error) {
-    console.error("Auth Error:", error);
-  }
-};
+  };
 
   return (
     <div className={`min-h-screen flex items-center justify-center px-6 ${isDarkMode ? 'bg-slate-900' : 'bg-slate-50'}`}>
@@ -59,7 +59,6 @@ const handleLogin = async (e) => {
         </div>
 
         <form onSubmit={handleLogin} className="space-y-6">
-          {/* Email Field */}
           <div>
             <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-slate-300' : 'text-slate-700'}`}>Email Address</label>
             <div className="relative">
@@ -76,7 +75,6 @@ const handleLogin = async (e) => {
             </div>
           </div>
 
-          {/* Password Field */}
           <div>
             <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-slate-300' : 'text-slate-700'}`}>Password</label>
             <div className="relative">
@@ -104,11 +102,7 @@ const handleLogin = async (e) => {
 
         <p className="mt-8 text-center text-sm text-slate-500">
           Don't have an account?{' '}
-          {/* ✅ 2. Use Link component to navigate to /signup */}
-          <Link 
-            to="/signup" 
-            className="text-emerald-500 font-bold hover:underline"
-          >
+          <Link to="/signup" className="text-emerald-500 font-bold hover:underline">
             Create one
           </Link>
         </p>
